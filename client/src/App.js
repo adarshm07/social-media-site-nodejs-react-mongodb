@@ -9,7 +9,7 @@ function App() {
   useEffect(() => {
     const data = () => fetchPosts().then((res) => setData(res.data));
     data();
-  }, [data]);
+  }, []);
 
   const counter = useSelector((state) => state.counter);
   const dispatch = useDispatch();
