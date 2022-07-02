@@ -2,36 +2,29 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { userDetails } from "../store/index";
-import { useEffect } from "react";
 
-export default function Login() {
-  const user = useSelector((state) => state.user.user);
-  const dispatch = useDispatch();
+export default function Register() {
+  //   const user = useSelector((state) => state.user.user);
+  //   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // if (document.cookie("access_token")) {
-    //   console.log("cookies - access token", document.cookie.access_token);
-    // }
-  }, []);
-
-  const login = async (values) => {
+  const register = async (values) => {
     const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/auth/login`,
+      `${process.env.REACT_APP_API_URL}/auth/register`,
       values,
       {
         withCredentials: true,
         credentials: "include",
       }
     );
-    dispatch(userDetails(response.data));
+    // dispatch(userDetails(response.data));
     console.log(response.data);
   };
-  console.log("user", user);
+//   console.log("user", user);
   return (
     <div>
       <h2>Login</h2>
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ username: "", password: "", email: "", name: "" }}
         validate={(values) => {
           const errors = {};
           if (!values.username) {
@@ -39,14 +32,26 @@ export default function Login() {
           }
           return errors;
         }}
-        onSubmit={login}
+        onSubmit={register}
       >
         {({ values }) => (
           <Form>
+            <label>Name</label>
+            <Field type="text" name="name" />
+            <ErrorMessage name="name" component="div" />
+            <br />
+            <label>Email</label>
+            <Field type="text" name="email" />
+            <ErrorMessage name="email" component="div" />
+            <br />
+            <label>Username</label>
             <Field type="text" name="username" />
             <ErrorMessage name="username" component="div" />
+            <br />
+            <label>Password</label>
             <Field type="password" name="password" />
             <ErrorMessage name="password" component="div" />
+            <br />
             <button type="submit">Submit</button>
           </Form>
         )}

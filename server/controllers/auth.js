@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res, next) => {
   try {
+    // check if user already there in db, then login.
+    const user = await User.findOne({ username: req.body.username });
+    if (user) res.json("username already used.");
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
     const newUser = new User({
@@ -19,7 +22,9 @@ export const register = async (req, res, next) => {
   }
 };
 
-export const login = async (req, res) => {
+// export
+
+export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) return res.status(400).json("User not found.");
@@ -33,18 +38,19 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
-      process.env.JWT
+      process.env.JWT,
+      { expiresIn: "2h" }
     );
 
-    const { password, isAdmin, ...rest } = user._doc;
+    // const { password, isAdmin, ...rest } = user._doc;
+    user.password = undefined;
+    user._doc.token = token;
     res
       .cookie("access_token", token, {
         httpOnly: true,
       })
       .status(200)
-      .json({
-        details: { ...rest }, isAdmin
-      });
+      .json(user);
   } catch (error) {
     res.status(400).json("Couldn't create post.");
   }
