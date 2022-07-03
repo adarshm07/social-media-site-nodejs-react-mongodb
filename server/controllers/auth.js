@@ -26,13 +26,15 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
-    if (!user) return res.status(400).json("User not found.");
+    const { username, password } = req.body;
+    if (!(username && password)) {
+      res.status(400).json("username or password is missing.");
+    }
 
-    const isAuthenticated = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
+    const user = await User.findOne({ username });
+    if (!user) return res.status(400).json("Please register an account.");
+
+    const isAuthenticated = await bcrypt.compare(password, user.password);
     if (!isAuthenticated)
       return res.status(401).json("username or password is incorrect.");
 
@@ -52,6 +54,12 @@ export const login = async (req, res, next) => {
       .status(200)
       .json(user);
   } catch (error) {
-    res.status(400).json("Couldn't create post.");
+    res.status(400).json("Error: Couldn't create an account.");
   }
+};
+
+export const logout = async (req, res) => {
+  try {
+    res.cookie("access_token", "").status(200).json("Logged out");
+  } catch (error) {}
 };

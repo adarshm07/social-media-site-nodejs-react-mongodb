@@ -43,8 +43,10 @@ export default function Login() {
       >
         {({ values }) => (
           <Form>
+            <label>Username</label>
             <Field type="text" name="username" />
             <ErrorMessage name="username" component="div" />
+            <label>Password</label>
             <Field type="password" name="password" />
             <ErrorMessage name="password" component="div" />
             <button type="submit">Submit</button>

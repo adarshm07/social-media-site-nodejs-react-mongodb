@@ -19,10 +19,10 @@ export default function Register() {
     // dispatch(userDetails(response.data));
     console.log(response.data);
   };
-//   console.log("user", user);
+  //   console.log("user", user);
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Register</h2>
       <Formik
         initialValues={{ username: "", password: "", email: "", name: "" }}
         validate={(values) => {

@@ -18,7 +18,9 @@ const AddForm = () => (
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
           setSubmitting(false);
-          axios.post("http://localhost:4000/posts/create", values);
+          axios.post("http://localhost:4000/posts/create", values, {
+            withCredentials: true,
+          });
         }, 400);
       }}
     >

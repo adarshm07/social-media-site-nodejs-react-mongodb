@@ -6,11 +6,14 @@ export const verifyToken = (req, res, next) => {
     // console.log('access', req.cookies);
     if (!token) res.status(401).json("Not authenticated.");
 
-    jwt.verify(token, process.env.JWT, (err, user) => {
-      if (err) res.status(401).json("Invalid session.");
-      req.user = user;
-      next();
-    });
+    // jwt.verify(token, process.env.JWT, (err, user) => {
+    //   if (err) res.status(401).json("Invalid session.");
+    //   req.user = user;
+    //   next();
+    // });
+
+    const decode = jwt.verify(token, process.env.JWT);
+    next();
   } catch (error) {
     console.log("Error: ", error.message);
   }
